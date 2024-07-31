@@ -1,0 +1,6 @@
+{
+  "name": "Staging User",
+  "email": "testeqa@embarca.ai",
+  "password": "Arca123",
+  "baseUrl": "https://www.embarca-staging.com.br/"
+}
