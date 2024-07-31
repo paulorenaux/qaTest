@@ -1,13 +1,16 @@
 import jQuery from "jquery";
 
-class ReservationsPage {
-  body='[class="reservations show sales"]'
-  seatAvailable = '[class="seat available"]';
+const body = '[class="reservations show sales"]';
+const seatAvailable = '[class="seat available"]';
 
-  static selectAnySeat () {
-    cypress.get(body).should('be.visible');
-    availableSeatCount = jQuery.findAll(seatAvailable).length();
-    randomAvailableSeat = Math.floor(Math.random() * availableSeatCount);
-    cypress.get(seatAvailable).eq(randomAvailableSeat).click();
-  }
-}
+export const selectAnySeat = () => {
+  cy.get(body)
+    .should("be.visible")
+    .then(() => {
+      let availableSeatCount = cy.$$(seatAvailable).length;
+      return Math.floor(Math.random() * availableSeatCount);
+    })
+    .then((selectedSeatIndex) => {
+      cy.get(seatAvailable).eq(selectedSeatIndex).click();
+    });
+};

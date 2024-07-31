@@ -1,4 +1,6 @@
 import { login, searchRoute } from "../pages/homePage";
+import { selectRoute } from "../pages/routesIndexPage";
+import { selectAnySeat } from '../pages/reservationsPage';
 import { advanceDate } from "../support/commonCommands";
 
 describe("home page", () => {
@@ -18,5 +20,7 @@ describe("home page", () => {
       cy.visit(fixture.baseUrl);
     });
     searchRoute(departingCity, arrivingCity, departingDate);
+    selectRoute();
+    selectAnySeat();
   });
 });

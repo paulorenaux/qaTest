@@ -53,20 +53,6 @@ export const searchRoute = (from, to, departingDate) => {
     cy.log(departingDate.getMonth());
     cy.log(months[currentMonth + i]);
 
-    // cy.get('body').then(($body) => {
-    //   // if the month being presented matches month in this iteration
-    //   const $monthElements = cy.$$(`:contains("${months[currentMonth + i]}")`)
-
-    //   // if the month being presented matches month in next iteration
-    //   const $nextMonthElements = cy.$$(`:contains("${months[currentMonth + i + 1]}")`)
-    //   $viewingMonthElements = cy.$$(`:contains("${months[currentMonth + i]}")`)
-    // })
-
-    // if presented month is departingdate month, continue
-    // else, click next
-
-    // cy.get(datePicker).find(next).click({ force: true });
-
     cy.get("body")
       .then(() => {
         // search for the element indicating the month being viewed,
