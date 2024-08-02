@@ -1,6 +1,3 @@
-import { getTimestamp } from "../support/commonCommands";
-import jQuery from "jquery";
-
 const inputEmail = '[id="email"]';
 const inputPassword = '[id="pass_log_id"]';
 const submitBtn = 'button[type="submit"]';
@@ -11,8 +8,10 @@ const inputTripDestination = '[id="destination_text"]';
 const locationsList = '[id="locations_list"]';
 const searchTripsBtn = '[id="search-trips-btn"]';
 const departureDate = '[class*="route_departure_at"]';
-const datePicker = '[class="datepicker-days"]';
+const datePickerDays = '[class="datepicker-days"]';
 const next = '[class="next"]';
+/** select the visible anchor in header to `/`*/
+const homeButton = 'header [href="/"]:visible';
 const months = [
   "Janeiro",
   "Fevereiro",
@@ -38,16 +37,28 @@ export const login = (baseUrl, email, password) => {
   cy.get(inputEmail).type(email);
   cy.get(inputPassword).type(password);
   cy.get(submitBtn).click();
+  // return to home screen via ui to avoid losing session
+  cy.get(homeButton).click();
+};
+
+/** Select city and state in a given field.
+ * @param cityAndState should be in format 'city name - state`
+ * @param selector is the selector to the field to be used
+ */
+const selectLocation = (cityAndState, selector) => {
+  // remove the hyphen to allow the location being found in selector
+  cy.get(selector).type(cityAndState.replace(" - ", " "));
+  cy.get(locationsList).find("li").first().click();
+  cy.get(selector).should("have.value", `${cityAndState.toUpperCase()}`);
 };
 
 export const searchRoute = (from, to, departingDate) => {
-  cy.get(inputTripOrigin).type(from);
-  cy.get(locationsList).find("li").first().click();
-  cy.get(inputTripDestination).type(to);
-  cy.get(locationsList).find("li").first().click();
+  selectLocation(from, inputTripOrigin);
+  selectLocation(to, inputTripDestination);
   cy.get(departureDate).click();
   const currentMonth = new Date().getMonth();
 
+  // advance in months according to `departingDate`
   for (let i = 0; currentMonth + i < departingDate.getMonth(); i++) {
     cy.log(currentMonth + i);
     cy.log(departingDate.getMonth());
@@ -62,11 +73,10 @@ export const searchRoute = (from, to, departingDate) => {
       })
       .then((viewingDepartingMonth) => {
         if (viewingDepartingMonth) cy.log("viewing current month");
-        else cy.get(datePicker).find(next).click({ force: true });
+        else cy.get(datePickerDays).find(next).click({ force: true });
       });
   }
 
-  let viewingDepartingMonth = false;
-  cy.get(`[class="day"]`).contains(departingDate.getDate()).click();
+  cy.get(datePickerDays).find("td").contains(departingDate.getDate()).click();
   cy.get(searchTripsBtn).click();
 };
